@@ -21,11 +21,10 @@ int error;
 int main() {
   //drive to firewall
   rturn(90);
-  drive(100);
+  drive_forward(100);
   lturn(90);
-  
   // use claw to pick up firewall and place on back of robot
-  
+  grab_firewall();
   //line up with black line
   while((analog(ir)>=(floor-error)) && (analog(ir)>=(floor+error)){
     mav(right, rspeed);
@@ -46,13 +45,19 @@ int main() {
     }                                                                      
   }
   //turn and place firewall
-  
+  place_firewall();
   //head towards watch floor
-  
+  lturn(90);
+  drive_forward(50);                                                                        
   //leave green poms in watch floor
-  
+  drive_backward(75);
+  lturn(90);                                                                                                                                              
   //leave red poms in analysis labs
-  
+  drive_forward(50);
+  rturn(90);
+  drive_forward(50);
+  drive_backward(50);
+  lturn(90);                                                                        
   //grab green drive and wait for create
   
   //place green drive in servo rack
@@ -108,13 +113,21 @@ freeze(right);
 freeze(left);
 }   
      
-void drive(int distance) {
+void drive_forward(int distance) {
   cmpc(right);
   while (gmpc(right) < (distance*cm)) {
     mav(left, lspeed);
     mav(right, rspeed);
   }
 }
+     
+void drive_backward(int distance) {
+  cmpc(right);
+  while (abs(gmpc(right)) < (distance*cm)) {
+    mav(left, -lspeed);
+    mav(right, -rspeed);
+  }
+}     
      
 void find_drive() {
   
@@ -123,5 +136,19 @@ void find_drive() {
 void find_tower() {
   
 }
+   
+void grab_firewall() {
+  
+}
      
+void place_firewall(){
+  
+}
      
+void grab_drive(){
+  
+}
+     
+void place_drive(){
+  
+}
