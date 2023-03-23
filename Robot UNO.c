@@ -1,4 +1,5 @@
 
+
 // touch sensors
 int FRtouch=0;
 int FLtouch=1;
@@ -68,12 +69,28 @@ int CM;           // ticks straight cm convertion
 
 // FUNCTIONS
 
+void gcd() {
+    get_create_distance();
+}
+
+void ccd() {
+    set_create_distance(0);
+}
+void cdd() {
+    create_drive_direct();
+}
+void gclb() {
+    get_create_lbump();
+}
+void gcrb() {
+    get_create_rbump();
+}
+
 void rturn(int angle) {    // rturn: turns right in degrees
 
-cmpc(ldrive);
-while(gmpc(ldrive) < (angle*degrees)) {
-    mav(rdrive, -Trspeed);
-    mav(ldrive, Tlspeed);
+ccd(ldrive);
+while(gcd(ldrive) < (angle*degrees)) {
+    cdd(Tlspeed, -Trspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
@@ -81,10 +98,9 @@ freeze(ldrive);
 
 void lturn(int angle) {    // lturn: turns left in degrees
 
-cmpc(rdrive);
-while(gmpc(rdrive) < (angle*degrees)) {
-    mav(rdrive, Trspeed);
-    mav(ldrive, -Tlspeed);
+ccd(rdrive);
+while(gcd(rdrive) < (angle*degrees)) {
+    cdd(-Tlspeed, Trspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
@@ -92,10 +108,9 @@ freeze(ldrive);
 
 void driveForward(int distance) {    // driveForward: drives forward in cm
 
-cmpc(rdrive);
-while(gmpc(rdrive) < (distance*CM)) {
-    mav(rdrive, rspeed);
-    mav(ldrive, lspeed);
+ccd(rdrive);
+while(gcd(rdrive) < (distance*CM)) {
+    cdd(lspeed, rspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
@@ -103,10 +118,9 @@ freeze(ldrive);
 
 void driveBack(int distance) {    // driveBack: drives backward in cm
 
-cmpc(rdrive);
-while(gmpc(rdrive) < (distance*CM)) {
-    mav(rdrive, -rspeed);
-    mav(ldrive, -lspeed);
+ccd(rdrive);
+while(gcd(rdrive) < (distance*CM)) {
+    cdd(-lspeed, -rspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
@@ -114,22 +128,19 @@ freeze(ldrive);
 
 void driveAsist(int distance) {    // driveAsist: drives forward in cm an balances encoders
 
-cmpc(rdrive);
-cmpc(ldrive);
-while(((gmpc(rdrive)+gmpc(ldrive))/2) < (distance*CM)) {
+ccd(rdrive);
+ccd(ldrive);
+while(((gcd(rdrive)+gcd(ldrive))/2) < (distance*CM)) {
     
 
-    if(gmpc(rdrive) = gmpc(ldrive)) {
-        mav(rdrive, 1000);
-        mav(ldrive, 1000);
+    if(gcd(rdrive) = gcd(ldrive)) {
+        cdd(1000, 1000);
         msleep(10);
-    } else if(gmpc(rdrive) < gmpc(ldrive)) {
-        mav(rdrive, 1000);
-        mav(ldrive, 925);
+    } else if(gcd(rdrive) < gcd(ldrive)) {
+        cdd(925, 1000);
         msleep(10);
     } else {
-        mav(rdrive, 925);
-        mav(ldrive, 1000);
+        cdd(1000, 925);
         msleep(10);
     }
     
@@ -140,22 +151,19 @@ freeze(ldrive);
 
 void rturnAsist(int angle) {    // rturnAsist: turns right in degrees and balances encoders
 
-cmpc(rdrive);
-cmpc(ldrive);
-while(((abs(gmpc(rdrive)) + gmpc(ldrive)) /2) < (angle*degrees)) {
+ccd(rdrive);
+ccd(ldrive);
+while(((abs(gcd(rdrive)) + gcd(ldrive)) /2) < (angle*degrees)) {
     
 
-    if(abs(gmpc(rdrive)) = gmpc(ldrive)) {
-        mav(rdrive, -1000);
-        mav(ldrive, 1000);
+    if(abs(gcd(rdrive)) = gcd(ldrive)) {
+        cdd(1000, -1000);
         msleep(10);
-    } else if(abs(gmpc(rdrive)) < gmpc(ldrive)) {
-        mav(rdrive, -1000);
-        mav(ldrive, 925);
+    } else if(abs(gcd(rdrive)) < gcd(ldrive)) {
+        cdd(925, -1000);
         msleep(10);
     } else {
-        mav(rdrive, -925);
-        mav(ldrive, 1000);
+        cdd(1000, -925);
         msleep(10);
     }
     
@@ -167,9 +175,8 @@ freeze(ldrive);
 
 void squareFRONT() {    // squareFRONT: squares up on front with touch sensors
 
-while((digital(FRtouch)=0) || (digital(FLtouch)=0)) {
-    mav(rdrive, rspeed);
-    mav(ldrive, lspeed);
+while((gcrb()==0) || (gclb()==0)) {
+    cdd(lspeed, rspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
@@ -177,9 +184,8 @@ freeze(ldrive);
 
 void squareBACK() {    // squareBACK: squares up on back with touch sensors
 
-while((digital(BRtouch)=0) || (digital(BLtouch)=0)) {
-    mav(rdrive, -rspeed);
-    mav(ldrive, -lspeed);
+while((gcrb()==0) || (gclb()==0)) {
+    cdd(-lspeed, -rspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
@@ -192,25 +198,21 @@ void towerALIGN(int line, int direction) {    // towerALIGN: directs robot to ba
 while (lineCount<line) {
 
     while(analog(irA)<irGrey) {
-        mav(rdrive, wallride*direction);
-        mav(ldrive, lspeed*direction);
+        cdd(lspeed*direction, wallride*direction);
         msleep(10);
     }
     while(analog(irA)>irGrey) {
-        mav(rdrive, wallride*direction);
-        mav(ldrive, lspeed*direction);
+        cdd(lspeed*direction, wallride*direction);
         msleep(10);
     }
     lineCount++;
 }
-mav(rdrive, wallride*direction);
-mav(ldrive, lspeed*direction);
+cdd(lspeed*direction, wallride*direction);
 msleep(250);
 freeze(rdrive);
 freeze(ldrive);
 while((analog(irA)<irGrey) || (analog(irB)<irGrey)) {
-    mav(rdrive, 500*(-direction));
-    mav(ldrive, 500*(-direction));
+    cdd(500*(-direction), 500*(-direction));
     msleep(10);
 }
 freeze(rdrive);
@@ -220,7 +222,7 @@ freeze(ldrive);
 
 
 
-void openRing(int ring) {    // openRing: opens to grad ring by number (smallest ring is 1)
+void openRing(int ring) {    // openRing: opens to grab ring by number (smallest ring is 1)
 if(ring==1) {
     set_servo_position(claw1, oR1);
 }
@@ -314,8 +316,7 @@ rturn(90);
 squareBACK();
 
 // Positioning for wall ride
-mav(rdrive, wallride);   
-mav(ldrive, lspeed);
+cdd(lspeed, wallride);   
 msleep(1000);
 
 // Wall riding and scoring
@@ -335,7 +336,8 @@ rturn();
 driveForward(6);
 squareBACK();
 squareFRONT();
-ao();
+create_stop();
 disable_servos();
+create_disconnect();
 
 }
