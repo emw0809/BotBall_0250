@@ -69,14 +69,10 @@ int main() {
 }
 
 void line_follow() {
-  if((analog(ir)>=(floor-50)) && (analog(ir)>=(floor+50)) {
-    mav(left, lspeed);
-    msleep(10);
-  }
-  if((analog(ir)>=(line-50)) && (analog(ir)>=(line+50)) {
-    mav(right, rspeed);
-    msleep(10);
-  }
+  int range = analog(ir)-floor;
+  float modifier = range*0.02;
+  mav(right, rspeed - modifier);
+  mav(left, lspeed + modifier);
    msleep(10);
 }
     
