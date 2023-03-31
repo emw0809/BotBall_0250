@@ -2,6 +2,14 @@
 int sweep;
 int lpos;
 int rpos;
+int arm;
+
+int claw;
+int up;
+int mid;
+int down;
+int open;
+int close; 
 
 // motors
 int left;
@@ -10,13 +18,11 @@ int lspeed;
 int rspeed;
 
 //ir sensors
-int ir
-int floor;
+int ir;
 int line;
-int green;
-int red; 
+int gray;
 
-int error;
+
 
 int main() {
   //drive to firewall
@@ -26,67 +32,103 @@ int main() {
   // use claw to pick up firewall and place on back of robot
   grab_firewall();
   //line up with black line
-  while((analog(ir)>=(floor-error)) && (analog(ir)>=(floor+error)){
+  while((analog(ir) > gray){
     mav(right, rspeed);
     mav(left, lspeed);
     msleep(10);
+  }
     lturn(90);
-  }
   // drive along black line and sort poms
-  int i;
-  for (i = 0, i < 10, i++) {
-    while(((analog(ir)>=(floor-error)) && (analog(ir)>=(floor+error)) || ((analog(ir)>=(line-error)) && (analog(ir)>=(line+error)) {
-      line_follow();
-      msleep(10);
-    }
-    while(((analog(ir)>=(green-error)) && (analog(ir)>=(green+error)) || ((analog(ir)>=(red-error)) && (analog(ir)>=(red+error)) {
-      sort();
-      msleep(10);
-    }                                                                      
-  }
+  line_follow(50);
+  sweep(0); 
+  line_follow(50);
+  sweep(0); 
+  line_follow(50);
+  sweep(0); 
+ 
   //turn and place firewall
-  place_firewall();
+  rturn(90);
+  enable_servo(claw);
+  enable_servo(arm);
+  set_servo_position(arm, down);
+  msleep(100);     
+  set_servo_position(claw, open);
+  msleep(100);      
+        
   //head towards watch floor
   lturn(90);
-  drive_forward(50);                                                                        
+  drive_forward(50);  
+        
   //leave green poms in watch floor
   drive_backward(75);
-  lturn(90);                                                                                                                                              
+  lturn(90);     
+        
   //leave red poms in analysis labs
   drive_forward(50);
   rturn(90);
   drive_forward(50);
   drive_backward(50);
-  lturn(90);                                                                        
-  //grab green drive and wait for create
-  
+  lturn(90);          
+        
+ //grab green drive and wait for create
+  find_drive();      
+  enable_servo(arm);
+  set_servo_position(arm, mid);
+  msleep(100);      
+  enable_servo(claw);
+  set_servo_position(claw, close);      
+  msleep(100);
+        
+        
   //place green drive in servo rack
-  
+  rturn(100);
+  drive_backward(50);      
+  tower_align();
+        
   //grab green drive and place in servo rack
+  rturn(180):
+  find_drive(); 
+  enable_servo(arm);
+  set_servo_position(arm, mid);
+  msleep(100);      
+  enable_servo(claw);
+  set_servo_position(claw, close);      
+  msleep(100);      
+  rturn(100);
+  drive_backward(50);      
+  tower_align();   
   
   //grab final green drive and place in servo rack
+        
   
 }
 
-void line_follow() {
+void line_follow(int distance) {
   int range = analog(ir)-floor;
   float modifier = range*0.02;
-  mav(right, rspeed - modifier);
-  mav(left, lspeed + modifier);
-   msleep(10);
+  cmpc(right);
+  cmpc(left);
+  while (gmpc(right) + gmpc(left) < distance*cm) {
+    mav(right, rspeed - modifier);
+    mav(left, lspeed + modifier);
+    msleep(10);
+  }
 }
     
      
-void sort() {
-  if((analog(ir)>=(green-error)) && (analog(ir)>=(green+error)) {
-    set_servo_position(sweep, lpos);
-    msleep(250);
-  }
-  if((analog(ir)>=(red-error)) && (analog(ir)>=(red+error)) {
-    set_servo_position(sweep, rpos);
-    msleep(250);
-  }
+void sort(bool direction) {
+  if(direction = 0){
+    enable_servo(sweep);
+    set_servo_position(sweep, left);
     msleep(10);
+    
+  }
+  if(direction = 1){
+    enable_servo(sweep);
+    set_servo_position(sweep, right);
+    msleep(10);
+    
+  }
 }
      
 void lturn(int angle) {    // lturn: turns left in degrees
@@ -129,22 +171,15 @@ void find_drive() {
   
 }
      
-void find_tower() {
+void tower_align() {
+  cmpc(right);
+  while(analog(ir) > gray){
+    mav(right, -rspeed);
+    msleep(10);
+  }
   
+  while(abs(gmpc(left)) < abs(gmpc(right))) {
+    mav(left, -lspeed);
+  }
 }
    
-void grab_firewall() {
-  
-}
-     
-void place_firewall(){
-  
-}
-     
-void grab_drive(){
-  
-}
-     
-void place_drive(){
-  
-}
