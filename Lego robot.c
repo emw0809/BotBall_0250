@@ -26,7 +26,7 @@ int gray;
 
 int main() {
   //drive to firewall
-  rturn(90);
+ rturn(90);
   drive_forward(100);
   lturn(90);
   // use claw to pick up firewall and place on back of robot
@@ -38,6 +38,7 @@ int main() {
     msleep(10);
   }
     lturn(90);
+        /*
   // drive along black line and sort poms
   line_follow(50);
   sweep(0); 
@@ -97,7 +98,7 @@ int main() {
   rturn(100);
   drive_backward(50);      
   tower_align();   
-  
+  */
   //grab final green drive and place in servo rack
         
   
