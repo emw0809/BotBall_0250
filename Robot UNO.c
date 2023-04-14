@@ -75,8 +75,7 @@ set_create_total_angle(0);
 while(get_create_total_angle()) < (angle*degrees)) {
     create_drive_direct(Tlspeed, -Trspeed);
 }
-freeze(rdrive);
-freeze(ldrive);
+create_stop();
 }
 
 void lturn(int angle) {    // lturn: turns left in degrees
@@ -85,8 +84,7 @@ set_create_total_angle(0);
 while(get_create_total_angle() < (angle*degrees)) {
     create_drive_direct(-Tlspeed, Trspeed);
 }
-freeze(rdrive);
-freeze(ldrive);
+create_stop();
 }
 
 void driveForward(int distance) {    // driveForward: drives forward in cm
@@ -95,8 +93,7 @@ set_create_distance(0);
 while(get_create_distance()) < (distance*CM)) {
     create_drive_direct(lspeed, rspeed);
 }
-freeze(rdrive);
-freeze(ldrive);
+create_stop();
 }
 
 void driveBack(int distance) {    // driveBack: drives backward in cm
@@ -105,8 +102,7 @@ set_create_distance(0);
 while(get_create_distance()) < (distance*CM)) {
     create_drive_direct(-lspeed, -rspeed);
 }
-freeze(rdrive);
-freeze(ldrive);
+create_stop();
 }
 
 void driveAsist(int distance) {    // driveAsist: drives forward in cm and balances encoders
@@ -117,19 +113,18 @@ while(((gcd(rdrive)+gcd(ldrive))/2) < (distance*CM)) {
     
 
     if(gcd(rdrive) = gcd(ldrive)) {
-        cdd(1000, 1000);
+        create_drive_direct(1000, 1000);
         msleep(10);
     } else if(gcd(rdrive) < gcd(ldrive)) {
-        cdd(925, 1000);
+        create_drive_direct(925, 1000);
         msleep(10);
     } else {
-        cdd(1000, 925);
+        create_drive_direct(1000, 925);
         msleep(10);
     }
     
 }
-freeze(rdrive);
-freeze(ldrive);
+create_stop();
 }
 
 void rturnAsist(int angle) {    // rturnAsist: turns right in degrees and balances encoders
@@ -140,13 +135,13 @@ while(((abs(gcd(rdrive)) + gcd(ldrive)) /2) < (angle*degrees)) {
     
 
     if(abs(gcd(rdrive)) = gcd(ldrive)) {
-        cdd(1000, -1000);
+        create_drive_direct(1000, -1000);
         msleep(10);
     } else if(abs(gcd(rdrive)) < gcd(ldrive)) {
-        cdd(925, -1000);
+        create_drive_direct(925, -1000);
         msleep(10);
     } else {
-        cdd(1000, -925);
+        create_drive_direct(1000, -925);
         msleep(10);
     }
     
@@ -158,8 +153,8 @@ freeze(ldrive);
 
 void squareFRONT() {    // squareFRONT: squares up on front with touch sensors
 
-while((gcrb()==0) || (gclb()==0)) {
-    cdd(lspeed, rspeed);
+while((get_create_left_bump()==0) || (get_create_right_bump()==0)) {
+    create_drive_direct(lspeed, rspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
@@ -167,11 +162,10 @@ freeze(ldrive);
 
 void squareBACK() {    // squareBACK: squares up on back with touch sensors
 
-while((gcrb()==0) || (gclb()==0)) {
-    cdd(-lspeed, -rspeed);
+while((get_create_right_bump()==0) || (get_create_left_bump()==0)) {
+    create_drive_direct(-lspeed, -rspeed);
 }
-freeze(rdrive);
-freeze(ldrive);
+create_stop();
 }
 
 
@@ -181,25 +175,23 @@ void towerALIGN(int line, int direction) {    // towerALIGN: directs robot to ba
 while (lineCount<line) {
 
     while(analog(irA)<irGrey) {
-        cdd(lspeed*direction, wallride*direction);
+        create_drive_direct(lspeed*direction, wallride*direction);
         msleep(10);
     }
     while(analog(irA)>irGrey) {
-        cdd(lspeed*direction, wallride*direction);
+        create_drive_direct(lspeed*direction, wallride*direction);
         msleep(10);
     }
     lineCount++;
 }
-cdd(lspeed*direction, wallride*direction);
+create_drive_direct(lspeed*direction, wallride*direction);
 msleep(250);
-freeze(rdrive);
-freeze(ldrive);
+create_stop();
 while((analog(irA)<irGrey) || (analog(irB)<irGrey)) {
-    cdd(500*(-direction), 500*(-direction));
+    create_drive_direct(500*(-direction), 500*(-direction));
     msleep(10);
 }
-freeze(rdrive);
-freeze(ldrive);
+create_stop();
 }
 
 
