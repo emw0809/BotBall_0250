@@ -82,7 +82,7 @@ void drive_forward(int distance) {
     mav(left, lspeed);
     mav(right, rspeed);
   }
-  */while ((gmpc(right)+gmpc(left)) < (distance*cm)) {
+  */while ((gmpc(right)+gmpc(left)/2) < (distance*cm)) {
     if (gmpc(right) > gmpc(left)) {  
     	mav(left, lspeed*(gmpc(right)/gmpc(left)));
     	mav(right, rspeed);
@@ -108,7 +108,7 @@ void drive_backward(int distance) {
     mav(left, -lspeed);
     mav(right, -rspeed);  
   }
- */ while (abs((gmpc(right)+gmpc(left))) < (distance*cm)) {
+ */ while (abs((gmpc(right)+gmpc(left)/2)) < (distance*cm)) {
     if (abs(gmpc(right)) > abs(gmpc(left))) {  
     	mav(left, -lspeed*(gmpc(right)/gmpc(left)));
     	mav(right, -rspeed);
