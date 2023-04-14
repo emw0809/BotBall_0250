@@ -128,6 +128,12 @@ void main() {
   rturn(90);  
   drive_forward(75);  
   lturn(90);
+  //while((digital(1)) = 0 || (ditital(2) = 0))){
+  //mav(right, -100);
+  //mav(left, -100);
+  //}
+  mav(left, 0);
+  mav(right, 0); */
   //line up with black line
   while((analog(ir) > line)){
     mav(right, rspeed);
