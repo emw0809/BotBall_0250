@@ -16,10 +16,10 @@ int close;
 // motors
 int left = 3;
 int right = 0;
-int lspeed = 800;
-int rspeed = 800;
-int cm = 93;
-int degrees = 13;
+int lspeed = 940;
+int rspeed = 1000;
+int cm = 100;
+int degrees = 12;
 
 //ir sensors
 int ir = 0;
@@ -28,18 +28,26 @@ int line = 1700;
 
 void line_follow(int distance) {
   int range = analog(ir) - line;
-  float modifier = range*0.02;
+  float modifier = range*0.05;
   cmpc(right);
   cmpc(left);
-  while (gmpc(right) + gmpc(left) < distance*cm) {
-    mav(right, rspeed - modifier);
-    mav(left, lspeed + modifier);
+  while ((gmpc(right) + gmpc(left))/2 < distance*cm) {
+      if(analog(ir) > line) {
+    	mav(right, rspeed + modifier);
+   	 	mav(left, lspeed - modifier);
+      }
+      if(analog(ir) < line) {
+    	mav(right, rspeed - modifier);
+   	 	mav(left, lspeed + modifier);
+      }
     msleep(10);
   }
 }
     
      
 void sweep(int direction) {
+    
+    
   if(direction == 0){
     enable_servo(sweeper);
     set_servo_position(sweeper, lpos);
@@ -52,27 +60,30 @@ void sweep(int direction) {
     msleep(100);
     
   }
+    
 }
      
 void lturn(int angle) {    // lturn: turns left in degrees
 cmpc(right);
-while(gmpc(right) < (angle*degrees/2)) {
+while(gmpc(right) < (angle*degrees)) {
     mav(right, rspeed);
     mav(left, -lspeed);
 }
-ao(right);
-ao(left);
+freeze(right);
+freeze(left);
+msleep(100);    
 }     
      
 void rturn(int angle) {    
 	cmpc(left);
-	while(gmpc(left) < (angle*degrees/2)) {
+	while(gmpc(left) < (angle*degrees)) {
     mav(right, -rspeed);
     mav(left, lspeed);
     msleep(10);    
   }
-ao(right);
-ao(left);
+	freeze(right);
+	freeze(left);
+    msleep(100);
 }   
      
 void drive_forward(int distance) {
@@ -81,23 +92,21 @@ void drive_forward(int distance) {
     /*while (gmpc(right) < (distance*cm)) {
     mav(left, lspeed);
     mav(right, rspeed);
-  }
-  */while ((gmpc(right)+gmpc(left)/2) < (distance*cm)) {
+  }*/
+  while ((gmpc(right)+gmpc(left)/2) < (distance*cm)) {
     if (gmpc(right) > gmpc(left)) {  
     	mav(left, lspeed*(gmpc(right)/gmpc(left)));
     	mav(right, rspeed);
-        msleep(10);
     }
     if (gmpc(left) > gmpc(right)) {  
     	mav(right, rspeed*(gmpc(left)/gmpc(right)));
     	mav(left, lspeed);
-        msleep(10);
-    }  
+    } 
     if(gmpc(left) == gmpc(right)){
     mav(right, rspeed);
-    mav(left, lspeed);
-    msleep(10);    
-    }
+    mav(left, lspeed);    
+    } 
+      msleep(10);
   } 
 }
 
@@ -107,61 +116,83 @@ void drive_backward(int distance) {
   /*while (abs(gmpc(right)) < (distance*cm)) {
     mav(left, -lspeed);
     mav(right, -rspeed);  
-  }
- */ while (abs((gmpc(right)+gmpc(left)/2)) < (distance*cm)) {
-    if (abs(gmpc(right)) > abs(gmpc(left))) {  
+  }*/
+  while (abs((gmpc(right)+gmpc(left))/2) < (distance*cm)) {
+    if (gmpc(right) > gmpc(left)) {  
     	mav(left, -lspeed*(gmpc(right)/gmpc(left)));
     	mav(right, -rspeed);
         msleep(10);
     }
-    if (abs(gmpc(left)) > abs(gmpc(right))) {  
+    if (gmpc(left) > gmpc(right)) {  
     	mav(right, -rspeed*(gmpc(left)/gmpc(right)));
     	mav(left, -lspeed);
         msleep(10);
     }  
+    if(gmpc(left) == gmpc(right)){
+    mav(right, -rspeed);
+    mav(left, -lspeed);
+    msleep(10);    
+    }  
+    
   }
 }     
 
 void main() {
   //drive to firewall
+    
   drive_forward(5);  
-  rturn(90);  
-  drive_forward(75);  
+  rturn(90);
+  drive_forward(80);
   lturn(90);
-  //while((digital(1)) = 0 || (ditital(2) = 0))){
-  //mav(right, -100);
-  //mav(left, -100);
-  //}
-  mav(left, 0);
-  mav(right, 0); */
   //line up with black line
-  while((analog(ir) > line)){
+  while((analog(ir) < line)){
     mav(right, rspeed);
     mav(left, lspeed);
     msleep(10);
   }
+    drive_forward(15);
     lturn(90);
         
   // drive along black line and sort poms
-  line_follow(10);
+  line_follow(30);
+  ao();
+  msleep(100);  
   sweep(0); 
-  line_follow(10);
+  line_follow(30);
+  ao();
+  msleep(100);   
   sweep(1); 
-  line_follow(10);
+  line_follow(30);
+  ao();
+  msleep(100);   
   sweep(0); 
-  line_follow(10);
+  line_follow(30);
+  ao();
+  msleep(100);   
   sweep(1); 
-  line_follow(10);
+  line_follow(30);
+  ao();
+  msleep(100);   
   sweep(0);       
-  line_follow(10);
+  line_follow(30);
+  ao();
+  msleep(100); 
   sweep(1);
-  line_follow(10);
+  line_follow(30);
+  ao();
+  msleep(100); 
   sweep(0);   
-  line_follow(10);
+  line_follow(30);
+  ao();
+  msleep(100);   
   sweep(1); 
-  line_follow(10);
+  line_follow(30);
+  ao();
+  msleep(100);   
   sweep(0);       
-  line_follow(10);
+  line_follow(30);
+  ao();
+  msleep(100);   
   sweep(1);      
   /*turn and place firewall
   rturn(90);
