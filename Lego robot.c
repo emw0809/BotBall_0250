@@ -56,7 +56,7 @@ void sweep(int direction) {
      
 void lturn(int angle) {    // lturn: turns left in degrees
 cmpc(right);
-while(gmpc(right) < (angle*degrees)) {
+while(gmpc(right) < (angle*degrees/2)) {
     mav(right, rspeed);
     mav(left, -lspeed);
 }
@@ -66,7 +66,7 @@ ao(left);
      
 void rturn(int angle) {    
 	cmpc(left);
-	while(gmpc(left) < (angle*degrees)) {
+	while(gmpc(left) < (angle*degrees/2)) {
     mav(right, -rspeed);
     mav(left, lspeed);
     msleep(10);    
