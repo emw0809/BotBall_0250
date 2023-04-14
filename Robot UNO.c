@@ -105,52 +105,6 @@ while(get_create_distance()) < (distance*CM)) {
 create_stop();
 }
 
-void driveAsist(int distance) {    // driveAsist: drives forward in cm and balances encoders
-
-ccd(rdrive);
-ccd(ldrive);
-while(((gcd(rdrive)+gcd(ldrive))/2) < (distance*CM)) {
-    
-
-    if(gcd(rdrive) = gcd(ldrive)) {
-        create_drive_direct(1000, 1000);
-        msleep(10);
-    } else if(gcd(rdrive) < gcd(ldrive)) {
-        create_drive_direct(925, 1000);
-        msleep(10);
-    } else {
-        create_drive_direct(1000, 925);
-        msleep(10);
-    }
-    
-}
-create_stop();
-}
-
-void rturnAsist(int angle) {    // rturnAsist: turns right in degrees and balances encoders
-
-ccd(rdrive);
-ccd(ldrive);
-while(((abs(gcd(rdrive)) + gcd(ldrive)) /2) < (angle*degrees)) {
-    
-
-    if(abs(gcd(rdrive)) = gcd(ldrive)) {
-        create_drive_direct(1000, -1000);
-        msleep(10);
-    } else if(abs(gcd(rdrive)) < gcd(ldrive)) {
-        create_drive_direct(925, -1000);
-        msleep(10);
-    } else {
-        create_drive_direct(1000, -925);
-        msleep(10);
-    }
-    
-}
-freeze(rdrive);
-freeze(ldrive);
-}
-
-
 void squareFRONT() {    // squareFRONT: squares up on front with touch sensors
 
 while((get_create_left_bump()==0) || (get_create_right_bump()==0)) {
