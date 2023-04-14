@@ -69,28 +69,11 @@ int CM;           // ticks straight cm convertion
 
 // FUNCTIONS
 
-void gcd() {
-    get_create_distance();
-}
-
-void ccd() {
-    set_create_distance(0);
-}
-void cdd() {
-    create_drive_direct();
-}
-void gclb() {
-    get_create_lbump();
-}
-void gcrb() {
-    get_create_rbump();
-}
-
 void rturn(int angle) {    // rturn: turns right in degrees
 
-ccd(ldrive);
-while(gcd(ldrive) < (angle*degrees)) {
-    cdd(Tlspeed, -Trspeed);
+set_create_total_angle(0);
+while(get_create_total_angle()) < (angle*degrees)) {
+    create_drive_direct(Tlspeed, -Trspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
@@ -98,9 +81,9 @@ freeze(ldrive);
 
 void lturn(int angle) {    // lturn: turns left in degrees
 
-ccd(rdrive);
-while(gcd(rdrive) < (angle*degrees)) {
-    cdd(-Tlspeed, Trspeed);
+set_create_total_angle(0);
+while(get_create_total_angle() < (angle*degrees)) {
+    create_drive_direct(-Tlspeed, Trspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
@@ -108,9 +91,9 @@ freeze(ldrive);
 
 void driveForward(int distance) {    // driveForward: drives forward in cm
 
-ccd(rdrive);
-while(gcd(rdrive) < (distance*CM)) {
-    cdd(lspeed, rspeed);
+set_create_distance(0);
+while(get_create_distance()) < (distance*CM)) {
+    create_drive_direct(lspeed, rspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
@@ -118,15 +101,15 @@ freeze(ldrive);
 
 void driveBack(int distance) {    // driveBack: drives backward in cm
 
-ccd(rdrive);
-while(gcd(rdrive) < (distance*CM)) {
-    cdd(-lspeed, -rspeed);
+set_create_distance(0);
+while(get_create_distance()) < (distance*CM)) {
+    create_drive_direct(-lspeed, -rspeed);
 }
 freeze(rdrive);
 freeze(ldrive);
 }
 
-void driveAsist(int distance) {    // driveAsist: drives forward in cm an balances encoders
+void driveAsist(int distance) {    // driveAsist: drives forward in cm and balances encoders
 
 ccd(rdrive);
 ccd(ldrive);
