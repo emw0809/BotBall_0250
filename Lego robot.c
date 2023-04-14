@@ -1,3 +1,4 @@
+#include <kipr/wombat.h>
 // servo
 int sweeper = 0;
 int lpos = 500;
@@ -15,8 +16,8 @@ int close;
 // motors
 int left = 3;
 int right = 0;
-int lspeed = 940;
-int rspeed = 1000;
+int lspeed = 800;
+int rspeed = 800;
 int cm = 93;
 int degrees = 13;
 
@@ -77,34 +78,37 @@ ao(left);
 void drive_forward(int distance) {
   cmpc(right);
   cmpc(left);  
-    while (gmpc(right) < (distance*cm)) {
+    /*while (gmpc(right) < (distance*cm)) {
     mav(left, lspeed);
     mav(right, rspeed);
   }
-  /*while ((gmpc(right)+gmpc(left)/2) < (distance*cm)) {
+  */while ((gmpc(right)+gmpc(left)) < (distance*cm)) {
     if (gmpc(right) > gmpc(left)) {  
     	mav(left, lspeed*(gmpc(right)/gmpc(left)));
     	mav(right, rspeed);
+        msleep(10);
     }
     if (gmpc(left) > gmpc(right)) {  
     	mav(right, rspeed*(gmpc(left)/gmpc(right)));
     	mav(left, lspeed);
+        msleep(10);
     }  
     if(gmpc(left) == gmpc(right)){
     mav(right, rspeed);
     mav(left, lspeed);
+    msleep(10);    
     }
-  } */
+  } 
 }
 
 void drive_backward(int distance) {
   cmpc(right);
   cmpc(left);  
-  while (abs(gmpc(right)) < (distance*cm)) {
+  /*while (abs(gmpc(right)) < (distance*cm)) {
     mav(left, -lspeed);
     mav(right, -rspeed);  
   }
- /* while (abs((gmpc(right)+gmpc(left))/2) < (distance*cm)) {
+ */ while (abs((gmpc(right)+gmpc(left))) < (distance*cm)) {
     if (abs(gmpc(right)) > abs(gmpc(left))) {  
     	mav(left, -lspeed*(gmpc(right)/gmpc(left)));
     	mav(right, -rspeed);
@@ -115,14 +119,14 @@ void drive_backward(int distance) {
     	mav(left, -lspeed);
         msleep(10);
     }  
-  }*/
+  }
 }     
 
 void main() {
   //drive to firewall
-  drive_forward(100);  
-  rturn(90);
-  drive_forward(75);
+  drive_forward(5);  
+  rturn(90);  
+  drive_forward(75);  
   lturn(90);
   //line up with black line
   while((analog(ir) > line)){
@@ -133,25 +137,25 @@ void main() {
     lturn(90);
         
   // drive along black line and sort poms
-  line_follow(30);
+  line_follow(10);
   sweep(0); 
-  line_follow(30);
+  line_follow(10);
   sweep(1); 
-  line_follow(30);
+  line_follow(10);
   sweep(0); 
-  line_follow(30);
+  line_follow(10);
   sweep(1); 
-  line_follow(30);
+  line_follow(10);
   sweep(0);       
-  line_follow(30);
+  line_follow(10);
   sweep(1);
-  line_follow(30);
+  line_follow(10);
   sweep(0);   
-  line_follow(30);
+  line_follow(10);
   sweep(1); 
-  line_follow(30);
+  line_follow(10);
   sweep(0);       
-  line_follow(30);
+  line_follow(10);
   sweep(1);      
   /*turn and place firewall
   rturn(90);
@@ -211,5 +215,4 @@ void main() {
     
   
 }
-
 
