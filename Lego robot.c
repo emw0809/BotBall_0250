@@ -41,6 +41,8 @@ void line_follow(int distance) {
    	 	mav(left, lspeed + modifier);
       }
     msleep(10);
+	  freeze(right);
+	  freeze(left);
   }
 }
     
@@ -51,7 +53,7 @@ void sweep(int direction) {
   if(direction == 0){
     enable_servo(sweeper);
     set_servo_position(sweeper, lpos);
-    msleep(10);
+    msleep(100);
     
   }
   if(direction == 1){
@@ -60,7 +62,7 @@ void sweep(int direction) {
     msleep(100);
     
   }
-    
+    disable_servo(sweeper);
 }
      
 void lturn(int angle) {    // lturn: turns left in degrees
@@ -155,43 +157,63 @@ void main() {
         
   // drive along black line and sort poms
   line_follow(30);
-  ao();
+  freeze(right);
+  freeze(left);	
+	
   msleep(100);  
   sweep(0); 
   line_follow(30);
-  ao();
+  freeze(right);
+  freeze(left);
+	
   msleep(100);   
   sweep(1); 
   line_follow(30);
-  ao();
+  freeze(right);
+  freeze(left);
+	
   msleep(100);   
   sweep(0); 
   line_follow(30);
-  ao();
+  freeze(right);
+  freeze(left);
+	
   msleep(100);   
   sweep(1); 
   line_follow(30);
-  ao();
+  freeze(right);
+  freeze(left);
+	
   msleep(100);   
   sweep(0);       
   line_follow(30);
-  ao();
+  freeze(right);
+  freeze(left);
+	
   msleep(100); 
   sweep(1);
   line_follow(30);
-  ao();
+  freeze(right);
+  freeze(left);
+	
   msleep(100); 
   sweep(0);   
   line_follow(30);
-  ao();
+  freeze(right);
+  freeze(left);
+	
   msleep(100);   
   sweep(1); 
   line_follow(30);
-  ao();
+  freeze(right);
+  freeze(left);
+	
   msleep(100);   
   sweep(0);       
   line_follow(30);
-  ao();
+  freeze(right);
+  freeze(left);
+	
   msleep(100);   
   sweep(1);      
   /*turn and place firewall
@@ -207,6 +229,7 @@ void main() {
   //head towards watch floor
   lturn(90);
   drive_forward(50);  
+  sweep(1);
         
   //leave green poms in watch floor
   drive_backward(15);
@@ -216,38 +239,10 @@ void main() {
   drive_forward(50);
   rturn(90);
   drive_forward(50);
+  sweep(0);	
   drive_backward(50);
   lturn(90);          
- /*       
- //grab green drive and wait for create
-  find_drive();      
-  enable_servo(arm);
-  set_servo_position(arm, mid);
-  msleep(100);      
-  enable_servo(claw);
-  set_servo_position(claw, close);      
-  msleep(100);
-        
-        
-  //place green drive in servo rack
-  rturn(100);
-  drive_backward(50);      
-  tower_align();
-        
-  //grab green drive and place in servo rack
-  rturn(180):
-  find_drive(); 
-  enable_servo(arm);
-  set_servo_position(arm, mid);
-  msleep(100);      
-  enable_servo(claw);
-  set_servo_position(claw, close);      
-  msleep(100);      
-  rturn(100);
-  drive_backward(50);      
-  tower_align();   
-  */
-  //grab final green drive and place in servo rack
+ 
      
     
   
