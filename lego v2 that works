@@ -1,7 +1,7 @@
 int sweeper = 1;
 int lpos = 500;
 int rpos = 1170;
-
+//int mpos = (middle position FIND THAT)
 // motors
 int left = 2;
 int right = 1;
@@ -100,26 +100,14 @@ void drive_forward(int distance) {
 void drive_backward(int distance) {
   cmpc(right);
   cmpc(left);  
-  /*while (abs(gmpc(right)) < (distance*cm)) {
-    mav(left, -lspeed);
-    mav(right, -rspeed);  
-  }*/
-  while (abs((gmpc(right)+gmpc(left))/2) < (distance*cm)) {
-    if (gmpc(right) > gmpc(left)) {  
-    	mav(left, -lspeed*(gmpc(right)/gmpc(left)));
-    	mav(right, -rspeed);
-        msleep(10);
-    }
-    if (gmpc(left) > gmpc(right)) {  
-    	mav(right, -rspeed*(gmpc(left)/gmpc(right)));
-    	mav(left, -lspeed);
-        msleep(10);
-    }  
-    if(gmpc(left) == gmpc(right)){
+    while (abs((gmpc(right)+gmpc(left))/2) < (distance*cm)) {
+    
     mav(right, -rspeed);
     mav(left, -lspeed);
     msleep(10);    
-    }  
+    }
+    freeze(left);
+    freeze(right);
     
   }
 }     
@@ -210,16 +198,6 @@ int main() {
 	
   msleep(100);   
   sweep(1);      
-  /*turn and place firewall
-  rturn(90);
-  enable_servo(claw);
-  enable_servo(arm);
-  set_servo_position(arm, down);
-  msleep(100);     
-  set_servo_position(claw, open);
-  msleep(100);      
-  */
-        
   //head towards watch floor
   lturn(90);
   drive_forward(50);  
@@ -230,7 +208,7 @@ int main() {
   lturn(90);     
         
   //leave red poms in analysis labs
-  drive_forward(50);
+  line_follow(50);
   rturn(90);
   drive_forward(50);
   sweep(0);	
