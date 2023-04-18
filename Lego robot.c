@@ -35,10 +35,12 @@ void line_follow(int distance) {
       if(analog(ir) > line) {
     	mav(right, rspeed + modifier);
    	 	mav(left, lspeed - modifier);
+	  msleep(10);
       }
       if(analog(ir) < line) {
     	mav(right, rspeed - modifier);
    	 	mav(left, lspeed + modifier);
+	      msleep(10);
       }
     msleep(10);
 	  freeze(right);
@@ -99,14 +101,18 @@ void drive_forward(int distance) {
     if (gmpc(right) > gmpc(left)) {  
     	mav(left, lspeed*(gmpc(right)/gmpc(left)));
     	mav(right, rspeed);
+	msleep(10);    
     }
     if (gmpc(left) > gmpc(right)) {  
     	mav(right, rspeed*(gmpc(left)/gmpc(right)));
     	mav(left, lspeed);
+	msleep(10);
     } 
     if(gmpc(left) == gmpc(right)){
     mav(right, rspeed);
     mav(left, lspeed);    
+    msleep(10);   
+	    
     } 
       msleep(10);
   } 
