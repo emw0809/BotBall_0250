@@ -1,10 +1,10 @@
 // claw positions (servo value positions)
 int clawopen= ;
 int clawredring= ;
-int claworaring= ;
-int clawyelring= ;
-int clawgrering= ;
-int clawbluring= ;
+int claworaangering= ;
+int clawyellowring= ;
+int clawgreenring= ;
+int clawbluering= ;
 
 //arm movement
 int liftspeed= ; //positive value moves the arm from the ground, up and towards the tower. Negative value moves the arm away from the tower and down towards the ground
@@ -13,10 +13,10 @@ int armshort= ; //moves claw from cube drop position to the top of the short tow
 int dropcubet= ; //moves cube from top of tall tower to the location to drop it
 itn dropcubes= ; //moves cube from the top of short tower to the location to drop it
 int armredring= ; //moves arm from dropping cube to grabbing red ring from rock-a-stack
-int armoraring= ; //moves arm from dropping cube to grabbing orange ring from rock-a-stack
-int armyelring= ; //moves arm from dropping cube to grabbing yellow ring from rock-a-stack
-int armgrering= ; //moves arm from dropping cube to grabbinggreen  ring from rock-a-stack
-int armbluring= ; //moves arm from dropping cube to grabbing blue ring from rock-a-stack
+int armorangering= ; //moves arm from dropping cube to grabbing orange ring from rock-a-stack
+int armyellowring= ; //moves arm from dropping cube to grabbing yellow ring from rock-a-stack
+int armgreenring= ; //moves arm from dropping cube to grabbinggreen  ring from rock-a-stack
+int armbluering= ; //moves arm from dropping cube to grabbing blue ring from rock-a-stack
 int tostand= ; //moves arm from cube drop position to ground to grab ring stand 
 
 // ports
@@ -116,16 +116,103 @@ freeze(arm1);
 freeze(arm2);
 }
   
-void orangering {			//moves arm from cube drop position to rock-a-stack, grabs orange ring, lifts ring to tall tower, releases ring, returns to cube drop position.
-while(gmpc(arm1)>-armoraring) {
+void orangering {			//moves arm from cube drop position to rock-a-stack, grabs orange ring, lifts ring to short tower, releases ring, returns to cube drop position.
+while(gmpc(arm1)>-armorangering) {
 mav(arm1,-liftspeed);
 mav(arm2,-liftspeed);
 }
 freeze(arm1);
 freeze(arm2);
-set_servo_position(claw,claworaring);
+set_servo_position(claw,claworangering);
 cmpc(arm1);
-while(gmpc(arm1)<-armoraring) {
+while(gmpc(arm1)<-armorangering) {
+mav(arm1,liftspeed);
+mav(arm2,liftspeed);
+cmpc(arm1);
+While(gmpc(arm1)<armshort) {
+mav(arm1,liftspeed);
+mav(arm2,liftspeed);
+}
+freeze(arm1);
+freeze(arm2);
+set_servo_position(claw,clawopen);
+cmpc(arm1);
+while(gmpc(arm1)>-armshort) {
+mav(arm1,-liftspeed);
+mav(arm2,-liftspeed);
+}
+freeze(arm1);
+freeze(arm2);
+}
+  
+void yellowring {			//moves arm from cube drop position to rock-a-stack, grabs yellow ring, lifts ring to tall tower, releases ring, returns to cube drop position.
+while(gmpc(arm1)>-armyellowring) {
+mav(arm1,-liftspeed);
+mav(arm2,-liftspeed);
+}
+freeze(arm1);
+freeze(arm2);
+set_servo_position(claw,clawyellowring);
+cmpc(arm1);
+while(gmpc(arm1)<-armyellowring) {
+mav(arm1,liftspeed);
+mav(arm2,liftspeed);
+cmpc(arm1);
+While(gmpc(arm1)<armtall) {
+mav(arm1,liftspeed);
+mav(arm2,liftspeed);
+}
+freeze(arm1);
+freeze(arm2);
+set_servo_position(claw,clawopen);
+cmpc(arm1);
+while(gmpc(arm1)>-armtall) {
+mav(arm1,-liftspeed);
+mav(arm2,-liftspeed);
+}
+freeze(arm1);
+freeze(arm2);
+}
+  
+void greenring {			//moves arm from cube drop position to rock-a-stack, grabs green ring, lifts ring to tall tower, releases ring, returns to cube drop position.
+while(gmpc(arm1)>-armgreenring) {
+mav(arm1,-liftspeed);
+mav(arm2,-liftspeed);
+}
+freeze(arm1);
+freeze(arm2);
+set_servo_position(claw,clawgreenring);
+cmpc(arm1);
+while(gmpc(arm1)<-armgreenering) {
+mav(arm1,liftspeed);
+mav(arm2,liftspeed);
+cmpc(arm1);
+While(gmpc(arm1)<armtall) {
+mav(arm1,liftspeed);
+mav(arm2,liftspeed);
+}
+freeze(arm1);
+freeze(arm2);
+set_servo_position(claw,clawopen);
+cmpc(arm1);
+while(gmpc(arm1)>-armtall) {
+mav(arm1,-liftspeed);
+mav(arm2,-liftspeed);
+}
+freeze(arm1);
+freeze(arm2);
+}
+  
+void bluering {			//moves arm from cube drop position to rock-a-stack, grabs blue ring, lifts ring to tall tower, releases ring, returns to cube drop position.
+while(gmpc(arm1)>-armbluering) {
+mav(arm1,-liftspeed);
+mav(arm2,-liftspeed);
+}
+freeze(arm1);
+freeze(arm2);
+set_servo_position(claw,clawbluering);
+cmpc(arm1);
+while(gmpc(arm1)<-armbluering) {
 mav(arm1,liftspeed);
 mav(arm2,liftspeed);
 cmpc(arm1);
@@ -215,7 +302,21 @@ int main {
   redring;
   ringstand;
   toorange;
-  org
+  shortcube;
+  orangering;
+  ringstand;
+  toyellow;
+  tallcube
+  yellowring;
+  ringstand;
+  togreen;
+  tallcube;
+  greenring;
+  ringstand;
+  toblue;
+  tallcube;
+  bluering;
+  
   
   
   
