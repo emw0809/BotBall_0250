@@ -21,6 +21,18 @@ int motor0 = 0;
 int motor1 = 1;
 int armSpeed = 275;
 
+int open ;
+int r1 ; //open value for given ring
+int r2 ;
+int r3 ;
+int r4 ;
+int r5 ;
+int r1c ; //closed on given ring
+int r2c ;
+int r3c ;
+int r4c ;
+int r5c ;
+int cube ; //closnig on a cube
 
 //Functions
 
