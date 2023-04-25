@@ -16,7 +16,7 @@ float deg=1.12;
 int CM=10;
 
 int ET = 0;   //ET sensor port
-int towerDis = 1650;    
+int towerDis = 1050;    
 
 int motor0 = 0;  // arm motor USE THIS MOTOR TO READ TICKS
 int motor1 = 1;  // second arm motor
@@ -82,37 +82,43 @@ int main()
   create_drive_direct(-lspeed, -rspeed);
   msleep(100);
 
-  rturn();
+  rturn(85);
   forward(6);
   msleep(500);
 
   //Tower 1
   align();
   msleep(250);
-  cubeLow();
+
 
   //Tower 5
-  wallRide(100);
+  wallRide(166);
   msleep(500);
 
   align();
   msleep(250);
-  cubeLow();
+  
 
   //Tower 3
-  wallRideBack(50);  //IF WALL RIDE BACK DOESNT WORK THEN USE NORMAL back(int distance) 
+  wallSquare();
+  back(75);  //IF WALL RIDE BACK DOESNT WORK THEN USE NORMAL back(int distance) 
   
   align();
   msleep(250);
-  cubeLow();
+  
 
-  //Tower 3
-  wallRideBack(25);  //IF WALL RIDE BACK DOESNT WORK THEN USE NORMAL back(int distance) 
+  //Tower 2
+  wallSquare();
+  back(37.5);  //IF WALL RIDE BACK DOESNT WORK THEN USE NORMAL back(int distance) 
   
   align();
   msleep(250);
-  cubeLow();
-
+  
+//Tower 4
+    wallRide(75);
+    msleep(500);
+    align();
+    msleep(250);
 
   create_disconnect();
 }
@@ -194,9 +200,9 @@ void wallRideBack(int distance) {
 
 void wallSquare() {
   while (get_create_lbump()==0) {
-    create_drive_direct(0,400);
+    create_drive_direct(0,170);
   }
-  rturn(25);
+  rturn(10);
   create_stop();
 }
 
