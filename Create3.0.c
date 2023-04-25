@@ -83,7 +83,7 @@ int main()
   msleep(100);
 
   rturn(85);
-  forward(6);
+  forward(10);
   msleep(500);
 
   //Tower 1
@@ -115,7 +115,7 @@ int main()
   msleep(250);
   
 //Tower 4
-    wallRide(75);
+    wallRide(85);
     msleep(500);
     align();
     msleep(250);
