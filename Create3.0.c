@@ -2,8 +2,6 @@
 #include <kipr/wombat.h>
 
 //Variables
-int arm=0; //port for arm motor
-int claw=2; //port for claw servo
 
 int lspeed=185;
 int rspeed=185;
@@ -17,11 +15,14 @@ int lTspeed=150;
 float deg=1.12;
 int CM=10;
 
-int towerDis;
+int ET = 0;   //ET sensor port
+int towerDis = 1650;    
 
-int motor0 = 0;
-int motor1 = 1;
+int motor0 = 0;  // arm motor USE THIS MOTOR TO READ TICKS
+int motor1 = 1;  // second arm motor
 int armSpeed = 275;
+
+int claw=2; //port for claw servo
 
 int open = 900 ;
 int r1 ; //open claw value for given ring
@@ -36,8 +37,8 @@ int r4c ;
 int r5c ;
 int cube= 60; //closed claw on a cube
 
-int high = 920;
-int low = 1150;
+int high = 920;   //high tower motor position (from down)
+int low = 1150;   //lower tower motor position (from down)
 
 //Functions
 
@@ -59,22 +60,26 @@ void offTowerBack();
 void armUp(int position);
 void armDown(int position);
 
+void cubeLow();
+void cubeHigh();
+
 
 //Main Create Program
 
 int main()
 {
   create_connect();
-  cmpc(motor0);
-    set_servo_position(claw,open);
-    enable_servos(claw);
+
+  
+  set_servo_position(claw,open);
+  enable_servos(claw);
   armUp(low);
-    msleep(1000);
-    set_servo_position(claw,cube);
-    msleep(1000);
-    armDown(1000);
-    msleep(1000);
-    
+  msleep(1000);
+  set_servo_position(claw,cube);
+  msleep(1000);
+  armDown(1000);
+  msleep(1000);
+  
   
   create_disconnect();
 }
@@ -147,9 +152,8 @@ void wallRideBack(int distance) {
     while (get_create_lbump()==0) {
       create_drive_direct(0,200);
     }
-    rturn(3);
-    create_drive_direct(-350,-400);
-    msleep(350);
+    create_drive_direct(-220,-265);
+    msleep(300);
   }
   create_stop();
 }
@@ -167,7 +171,7 @@ void wallSquare() {
 
 
 void onTower() {
-  while(analog_et(0) < towerDis) {
+  while(analog_et(ET) < towerDis) {
     create_drive_direct(lTspeed,rTspeed);
   }
   create_stop();
@@ -175,7 +179,7 @@ void onTower() {
 
 
 void offTower() {
-  while(analog_et(0) > towerDis) {
+  while(analog_et(ET) > towerDis) {
     create_drive_direct(lTspeed,rTspeed);
   }
   create_stop();
@@ -183,7 +187,7 @@ void offTower() {
 
 
 void onTowerBack() {
-  while(analog_et(0) < towerDis) {
+  while(analog_et(ET) < towerDis) {
     create_drive_direct(-lTspeed,-rTspeed);
   }
   create_stop();
@@ -191,7 +195,7 @@ void onTowerBack() {
 
 
 void offTowerBack() {
-  while(analog_et(0) > towerDis) {
+  while(analog_et(ET) > towerDis) {
     create_drive_direct(-lTspeed,-rTspeed);
   }
   create_stop();
@@ -201,7 +205,10 @@ void offTowerBack() {
 
 
 void armUp (int position) {
-  while(gmpc(arm) < position) {
+
+  cmpc(motor0);
+
+  while(gmpc(motor0) < position) {
     mav(motor0, armSpeed);
     mav(motor1, armSpeed);
   }
@@ -213,7 +220,10 @@ void armUp (int position) {
 
 
 void armDown (int position) {
-  while(gmpc(arm) < position) {
+
+  cmpc(motor0);
+
+  while(gmpc(motor0) < position) {
     mav(motor0, -armSpeed);
     mav(motor1, -armSpeed);
   }
@@ -221,4 +231,33 @@ void armDown (int position) {
   freeze(motor1);
   msleep(100);
   ao();
+}
+
+
+void cubeLow() {
+  set_servo_position(claw,open);
+  enable_servos(claw);
+
+  armUp(low);
+  msleep(400);
+
+  set_servo_position(claw,cube);
+  msleep(800);
+
+  armDown(low);
+  msleep(400);
+}
+
+void cubeHigh() {
+  set_servo_position(claw,open);
+  enable_servos(claw);
+
+  armUp(low);
+  msleep(400);
+
+  set_servo_position(claw,cube);
+  msleep(800);
+
+  armDown(low);
+  msleep(400);
 }
