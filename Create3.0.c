@@ -57,6 +57,8 @@ void offTower();
 void onTowerBack();
 void offTowerBack();
 
+void align();
+
 void armUp(int position);
 void armDown(int position);
 
@@ -70,17 +72,48 @@ int main()
 {
   create_connect();
 
+  lturn(90);
+
+  while(get_create_lbump() == 0) {
+    create_drive_direct(lspeed, rspeed);
+  }
+  create_stop();
+
+  create_drive_direct(-lspeed, -rspeed);
+  msleep(100);
+
+  rturn();
+  forward(6);
+  msleep(500);
+
+  //Tower 1
+  align();
+  msleep(250);
+  cubeLow();
+
+  //Tower 5
+  wallRide(100);
+  msleep(500);
+
+  align();
+  msleep(250);
+  cubeLow();
+
+  //Tower 3
+  wallRideBack(50);  //IF WALL RIDE BACK DOESNT WORK THEN USE NORMAL back(int distance) 
   
-  set_servo_position(claw,open);
-  enable_servos(claw);
-  armUp(low);
-  msleep(1000);
-  set_servo_position(claw,cube);
-  msleep(1000);
-  armDown(1000);
-  msleep(1000);
+  align();
+  msleep(250);
+  cubeLow();
+
+  //Tower 3
+  wallRideBack(25);  //IF WALL RIDE BACK DOESNT WORK THEN USE NORMAL back(int distance) 
   
-  
+  align();
+  msleep(250);
+  cubeLow();
+
+
   create_disconnect();
 }
 
@@ -145,7 +178,6 @@ void wallRide(int distance) {
 }
 
 void wallRideBack(int distance) {
-  
   set_create_distance(0);
   
   while (abs(get_create_distance()) < (distance*CM)) {
@@ -199,6 +231,15 @@ void offTowerBack() {
     create_drive_direct(-lTspeed,-rTspeed);
   }
   create_stop();
+}
+
+
+void align() {
+    if(analog_et(ET) > towerDis) {
+        offTowerBack();
+    } else {
+        onTower();
+    }
 }
 
 
