@@ -16,7 +16,7 @@ float deg=1.12;
 int CM=10;
 
 int ET = 0;   //ET sensor port
-int towerDis = 1050;    
+int towerDis = 1050;
 
 int motor0 = 0;  // arm motor USE THIS MOTOR TO READ TICKS
 int motor1 = 1;  // second arm motor
@@ -25,27 +25,22 @@ int armSpeed = 275;
 int claw=2; //port for claw servo
 
 int open = 900 ;
-int r1 ; //open claw value for given ring
-int r2 ;
-int r3 ;
-int r4 ;
-int r5 ;
-int r1c = 38 ; //closed claw on given ring
-int r2c ;
-int r3c ;
-int r4c ;
-int r5c ;
 int cube= 60; //closed claw on a cube
 
 int high = 920;   //high tower motor position (from down)
 int low = 1150;   //lower tower motor position (from down)
+
+int wrist = 3;   // wrist servo port
+int wrsitLow;    // low tower wrist position
+int wristHigh;   // high tower wrist position
+int wristDown;   // arm down wrist position
 
 //Functions
 
 void rturn(int angle);
 void lturn(int angle);
 
-void forwad(int distance);
+void forward(int distance);
 void back(int distance);
 
 void wallRide(int distance);
@@ -61,9 +56,12 @@ void align();
 
 void armUp(int position);
 void armDown(int position);
+void armBump();
 
 void cubeLow();
 void cubeHigh();
+
+void botgal();
 
 
 //Main Create Program
@@ -71,55 +69,55 @@ void cubeHigh();
 int main()
 {
   create_connect();
-
+  
   lturn(90);
-
+  
   while(get_create_lbump() == 0) {
     create_drive_direct(lspeed, rspeed);
   }
   create_stop();
-
+  
   create_drive_direct(-lspeed, -rspeed);
   msleep(100);
-
+  
   rturn(85);
   forward(10);
   msleep(500);
-
+  
   //Tower 1
   align();
   msleep(250);
-
-
-  //Tower 5
-  wallRide(166);
-  msleep(500);
-
-  align();
-  msleep(250);
   
-
-  //Tower 3
-  wallSquare();
-  back(75);  //IF WALL RIDE BACK DOESNT WORK THEN USE NORMAL back(int distance) 
   
-  align();
-  msleep(250);
-  
-
   //Tower 2
-  wallSquare();
-  back(37.5);  //IF WALL RIDE BACK DOESNT WORK THEN USE NORMAL back(int distance) 
+  wallRide(36);
+  msleep(500);
   
   align();
   msleep(250);
   
-//Tower 4
-    wallRide(85);
-    msleep(500);
-    align();
-    msleep(250);
-
+  //Tower 3
+  wallRide(36);
+  msleep(500);
+  
+  align();
+  msleep(250);
+  
+  //Tower 4
+  wallRide(36);
+  msleep(500);
+  
+  align();
+  msleep(250);
+  
+  //Tower 5
+  wallRide(36);
+  msleep(500);
+  
+  align();
+  msleep(250);
+  
+  
   create_disconnect();
 }
 
@@ -241,20 +239,31 @@ void offTowerBack() {
 
 
 void align() {
-    if(analog_et(ET) > towerDis) {
-        offTowerBack();
-    } else {
-        onTower();
-    }
+  if(analog_et(ET) > towerDis) {
+    offTowerBack();
+  } else {
+    onTower();
+  }
 }
 
 
+void armBump () {
+  
+  while(digital(0) == 0) {
+    mav(motor0, armSpeed);
+    mav(motor1, armSpeed);
+  }
+  freeze(motor0);
+  freeze(motor1);
+  msleep(100);
+  ao();
+}
 
 
 void armUp (int position) {
-
+  
   cmpc(motor0);
-
+  
   while(gmpc(motor0) < position) {
     mav(motor0, armSpeed);
     mav(motor1, armSpeed);
@@ -267,9 +276,9 @@ void armUp (int position) {
 
 
 void armDown (int position) {
-
+  
   cmpc(motor0);
-
+  
   while(gmpc(motor0) < position) {
     mav(motor0, -armSpeed);
     mav(motor1, -armSpeed);
@@ -282,29 +291,108 @@ void armDown (int position) {
 
 
 void cubeLow() {
+  set_servo_position(wrist,wristLow);
   set_servo_position(claw,open);
-  enable_servos(claw);
-
+  enable_servos();
+  
   armUp(low);
-  msleep(400);
-
+  msleep(250);
+  
   set_servo_position(claw,cube);
-  msleep(800);
-
+  msleep(700);
+  
   armDown(low);
-  msleep(400);
+  msleep(150);
+  disable_servos();
 }
 
 void cubeHigh() {
+  set_servo_position(wrist,wristHigh);
   set_servo_position(claw,open);
-  enable_servos(claw);
-
+  enable_servos();
+  
   armUp(low);
-  msleep(400);
-
+  msleep(250);
+  
   set_servo_position(claw,cube);
-  msleep(800);
-
+  msleep(700);
+  
   armDown(low);
-  msleep(400);
+  msleep(150);
+  disable_servos();
 }
+
+
+void botgal() {
+
+  lturn(90);
+  back(38);
+  lturn(90);
+
+  while(get_create_lbump() == 0) {
+    create_drive_direct(lspeed, rspeed);
+  }
+  create_stop();
+
+  create_drive_direct(-lspeed, -rspeed);
+  msleep(100);
+  create_stop();
+  msleep(100);
+
+  rturn(90);
+
+}
+
+
+
+void ringRun() {  // old main code for ring tower positioning
+  
+  lturn(90);
+  
+  while(get_create_lbump() == 0) {
+    create_drive_direct(lspeed, rspeed);
+  }
+  create_stop();
+  
+  create_drive_direct(-lspeed, -rspeed);
+  msleep(100);
+  
+  rturn(85);
+  forward(10);
+  msleep(500);
+  
+  //Tower 1
+  align();
+  msleep(250);
+  
+  
+  //Tower 5
+  wallRide(166);
+  msleep(500);
+  
+  align();
+  msleep(250);
+  
+  
+  //Tower 3
+  wallSquare();
+  back(75);  //IF WALL RIDE BACK DOESNT WORK THEN USE NORMAL back(int distance)
+  
+  align();
+  msleep(250);
+  
+  
+  //Tower 2
+  wallSquare();
+  back(37);  //IF WALL RIDE BACK DOESNT WORK THEN USE NORMAL back(int distance)
+  
+  align();
+  msleep(250);
+  
+  //Tower 4
+  wallRide(85);
+  msleep(500);
+  align();
+  msleep(250);
+}
+
