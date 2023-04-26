@@ -1,7 +1,5 @@
-#include <kipr/wombat.h>
-
-void line_follow_left( int distance) {
-  while ((gmpc(right)+gmpc(left))/2 < distance) {
+void line_follow_left(int distance) {
+  while ((gmpc(right)+gmpc(left))/2 < distance*cm) {
     if (analog(ir) < (line+floor)/2) {
       mav(right, rspeed - 300);
       mav(left, lspeed);
@@ -14,7 +12,7 @@ void line_follow_left( int distance) {
 }
 
 void line_follow_right( int distance) {
-  while ((gmpc(right)+gmpc(left))/2 < distance) {
+  while ((gmpc(right)+gmpc(left))/2 < distance*cm) {
     if (analog(ir) < (line + floor)/2) {
       mav(right, rspeed);
       mav(left, lspeed - 300);
