@@ -20,20 +20,20 @@ int towerDis = 1050;
 
 int motor0 = 0;  // arm motor USE THIS MOTOR TO READ TICKS
 int motor1 = 1;  // second arm motor
-int armSpeed = 275;
+int armSpeed = 500;
 
-int claw=2; //port for claw servo
+int claw=3; //port for claw servo
 
-int open = 900 ;
-int cube= 60; //closed claw on a cube
+int open = 1362 ;
+int cube= 800; //closed claw on a cube
 
-int high = 920;   //high tower motor position (from down)
-int low = 1150;   //lower tower motor position (from down)
+int high = 850;   //high tower motor position (from down)
+int low = 940;   //lower tower motor position (from down)
 
-int wrist = 3;   // wrist servo port
-int wrsitLow;    // low tower wrist position
-int wristHigh;   // high tower wrist position
-int wristDown;   // arm down wrist position
+int wrist = 2;   // wrist servo port
+int wristLow = 1799;    // low tower wrist position
+int wristHigh = 1457;   // high tower wrist position
+int wristDown = 900;   // arm down wrist position
 
 //Functions
 
@@ -68,55 +68,62 @@ void botgal();
 
 int main()
 {
+  wait_for_light(1);
+  shut_down_in(120);
   create_connect();
+    
+  lturn(85); //turns towards data center
   
-  lturn(90);
-  
-  while(get_create_lbump() == 0) {
+  while(get_create_lbump() == 0) { //drives forward until contact with pvc 
     create_drive_direct(lspeed, rspeed);
   }
   create_stop();
-  
-  create_drive_direct(-lspeed, -rspeed);
+    create_drive_direct(-lspeed, -rspeed); //backup to avoid "beaching" on pvc
   msleep(100);
   
-  rturn(85);
-  forward(10);
+  rturn(85); //turn to drive along wall
+  forward(18); //drive forward to tower 1 (red tower)
   msleep(500);
-  
+
   //Tower 1
-  align();
-  msleep(250);
+  align();  //aligns with tower 1 (red tower)
+  cubeLow();
+  msleep(250); 
+  
   
   
   //Tower 2
-  wallRide(36);
-  msleep(500);
+  wallRide(20); //drives forward to tower 2 (green/blue tower)
+  msleep(500); 
   
-  align();
-  msleep(250);
+  align(); //aligns with the edge of the tower
+  cubeHigh();
+  msleep(250); 
   
   //Tower 3
-  wallRide(36);
+  wallRide(20); //drives forward to tower 3 (yellow tower)
   msleep(500);
   
-  align();
-  msleep(250);
+  align(); //aligns with the edge of the tower
+  cubeHigh();
+  msleep(250); 
+  botgal(); //grab botgal off tower, turn and drive to analysis lab, drop botgall, return to tower, facing original direction
   
   //Tower 4
-  wallRide(36);
+  wallRide(40); //drive forward to tower 4 (green/blue tower)
   msleep(500);
   
-  align();
+  align(); //aligns with edge of tower
+  cubeHigh();
   msleep(250);
   
   //Tower 5
-  wallRide(36);
+  wallRide(28); //drives forward to tower 5 (orange tower)
   msleep(500);
   
-  align();
+  align(); //aligns with edge of tower
+  cubeLow();
   msleep(250);
-  
   
   create_disconnect();
 }
@@ -244,6 +251,7 @@ void align() {
   } else {
     onTower();
   }
+  forward(23);
 }
 
 
@@ -279,7 +287,7 @@ void armDown (int position) {
   
   cmpc(motor0);
   
-  while(gmpc(motor0) < position) {
+  while(abs(gmpc(motor0)) < position) {
     mav(motor0, -armSpeed);
     mav(motor1, -armSpeed);
   }
@@ -291,6 +299,7 @@ void armDown (int position) {
 
 
 void cubeLow() {
+    cmpc(motor0);
   set_servo_position(wrist,wristLow);
   set_servo_position(claw,open);
   enable_servos();
@@ -300,50 +309,69 @@ void cubeLow() {
   
   set_servo_position(claw,cube);
   msleep(700);
-  
+  cmpc(motor0);
   armDown(low);
+  mav(motor0, -armSpeed);
+  mav(motor1, -armSpeed);
+  msleep(100);
+  ao();
+  
   msleep(150);
+  set_servo_position(wrist,wristDown);
+  msleep(250);
+  set_servo_position(claw,open);
+  msleep(250);
   disable_servos();
 }
 
 void cubeHigh() {
+    cmpc(motor0);
   set_servo_position(wrist,wristHigh);
   set_servo_position(claw,open);
   enable_servos();
   
-  armUp(low);
+  armUp(high);
   msleep(250);
   
   set_servo_position(claw,cube);
   msleep(700);
-  
-  armDown(low);
+  cmpc(motor0);
+  armDown(high);
+  mav(motor0, -armSpeed);
+  mav(motor1, -armSpeed);
+  msleep(100);
+    
   msleep(150);
+  set_servo_position(wrist,wristDown);
+  msleep(250);
+  set_servo_position(claw,open);
+  msleep(250);
   disable_servos();
 }
 
 
-void botgal() {
+
+void botgal() { 
 
   lturn(90);
-  back(38);
-  lturn(90);
+  back(57);
+  create_stop();
+  msleep(500); //add arm movement to drop botgal here
 
   while(get_create_lbump() == 0) {
     create_drive_direct(lspeed, rspeed);
   }
   create_stop();
+    create_drive_direct(-lspeed,-rspeed);
+    msleep(120);
+    create_stop();
 
-  create_drive_direct(-lspeed, -rspeed);
-  msleep(100);
+ rturn(90);
   create_stop();
-  msleep(100);
-
-  rturn(90);
-
+  msleep(500);
 }
 
-
+ 
 
 void ringRun() {  // old main code for ring tower positioning
   
