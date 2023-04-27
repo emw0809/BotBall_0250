@@ -298,3 +298,7 @@ void grabGal() {
   freeze(motor1);
   
 }
+
+void rackStack() {
+  
+}
