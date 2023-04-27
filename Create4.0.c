@@ -24,8 +24,8 @@ int armSpeed = 500;
 
 int claw=3; //port for claw servo
 
-int open = 340;   //opened claw position
-int close= 975;   //closed claw postion for botgal
+int open = 120;   //opened claw position
+int close= 800;   //closed claw postion for botgal
 
 int high = 850;   //high tower motor position (from down)
 
@@ -300,5 +300,17 @@ void grabGal() {
 }
 
 void rackStack() {
+  lturn(45);
+  
+  armUp(450);
+  freeze(motor0);
+  freeze(motor1);
+  
+  lturn(65);
+  set_servo_position(claw, close);
+  enable_servos();
+  armDown(200);
+  freeze(motor0);
+  freeze(motor1);
   
 }
