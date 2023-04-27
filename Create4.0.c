@@ -24,8 +24,8 @@ int armSpeed = 500;
 
 int claw=3; //port for claw servo
 
-int open = 120;   //opened claw position
-int close= 800;   //closed claw postion for botgal
+int open = 1200;   //opened claw position
+int close= 20;   //closed claw postion for botgal
 
 int high = 850;   //high tower motor position (from down)
 
@@ -60,9 +60,11 @@ void grabGal();
 
 int main()
 {
-  wait_for_light(1);   // intitial setup code
+  //wait_for_light(1);   // intitial setup code
   shut_down_in(120);
   create_connect();
+    
+  forward(5);
   
   lturn(85);    // turns towards data center and server racks
   
@@ -75,13 +77,13 @@ int main()
   msleep(100);
   
   rturn(85);     // turn to drive along wall
-  forward(18);   // drive forward a little over to tower 1 (red tower) to get closer to alignment before using ET sensor
+  forward(13);   // drive forward a little over to tower 1 (red tower) to get closer to alignment before using ET sensor
   msleep(250);
   
   align();       //aligns with left edge of tower 1 (red tower) using ET sensor
   msleep(250);
   
-  wallRide(80);  // rides the server wall with bumpers to get to botgal
+  wallRide(70);  // rides the server wall with bumpers to get to botgal
   align();       // aligns with left edge of center server tower using ET sensor
   
   forward(18);   // shifting over to acount for claw offset
@@ -278,13 +280,13 @@ void grabGal() {
 
   set_servo_position(claw,open);
   enable_servos();
-  
+  cmpc(motor0);
   armUp(high);
   msleep(600);
   
   set_servo_position(claw,close);
   msleep(700);
-
+cmpc(motor0);
   armDown(high);
 
   mav(motor0, -armSpeed);
