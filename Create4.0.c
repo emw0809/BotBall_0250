@@ -113,20 +113,20 @@ void offTower();      //Moves forward until tower is NOT sensed by ET sensor
 void onTowerBack();   //Moves back until tower is sensed by ET sensor
 void offTowerBack();  //Moves back until tower is NOT sensed by ET sensor
 
-void align();
+void align();  //Uses ET sensor to align with left edge of tower
 
-void armUp(int position);
-void armDown(int position);
-void armBump();
+void armUp(int position);    //Moves arm up using encoders position in ticks
+void armDown(int position);  //Moves arm down
+void armBump();              //Moves arm up until limit button is hit
 
-void grabGal();
-void grabCube();
-void rackStack();
+void grabGal();    //Moves arm up from down position to high tower, grabs botgall, and moves arm down
+void grabCube();   //Moves arm up from down position to high tower, grabs a yellow log cube, and moves arm down
+void rackStack();  //Knocks over rackastack from start poition
 
-void forwardLine1();
-void forwardLine2();
-void backLine1();
-void backLine2();
+void forwardLine1();  //drives forward until line is sensed
+void forwardLine2();  //drives forward until it has PASSED a line
+void backLine1();     //drives back until line is sensed
+void backLine2();     //drives back until it has PASSED a line
 
 //Main Create Program
 
@@ -137,8 +137,12 @@ int main()
   create_connect();
   
   forward(4);
+  lturn(90);    //turn towards server room
   
-  rackStack();
+  /*
+  forward(4);   //move a little away from wall
+  rackStack();  //knock over rackastack
+  */
   
   while(get_create_lbump() == 0) {           // drives forward until bumpers contact pvc server wall
     create_drive_direct(lspeed, rspeed);
@@ -155,14 +159,14 @@ int main()
   align();       //aligns with left edge of tower 1 (red tower) using ET sensor
   msleep(250);
   
-  wallRide(75);  // rides the server wall with bumpers to get to botgal
+  wallRide(72);  // rides the server wall with bumpers to get to botgal
   align();       // aligns with left edge of center server tower using ET sensor
   
   forward(18);   // shifting over to acount for claw offset
   grabGal();     // lifting arm, grabbing botgal, and lowering arm
   msleep(250);
   
-  rturn(90);     // turning directaly away from server towers
+  rturn(90);     // turning directly away from server towers
   forward(57);   // driving towards analysis lab
   msleep(250);
   
@@ -462,7 +466,7 @@ void grabCube() {
 }
 
 void rackStack() {
-  lturn(45);
+  rturn(45);
   msleep(100);
   
   set_servo_position(claw, close);
