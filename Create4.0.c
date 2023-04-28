@@ -1,53 +1,117 @@
 #include <stdio.h>
 #include <kipr/wombat.h>
 
+/*
+PSEUDO CODE
+
+0-15sec
+-Turn to the left and raise your arm over the Rackastack
+-Lower the arm and turn right to hit the top of the rackastack
+-Hit it again by turning to ensure it is knocked over
+-Turn to the left towards the server racks
+
+15sec-30sec
+-Drive straight towards the server racks out of the watch floor
+-Stop as soon as the bumpers on the front of the create are pressed
+-Back up slightly from the pipe wall along server racks to prevent rubbing
+-Then turn right 90 deg so the create is facing down the line of server racks
+-For precise alignment, if  the ET sensor senses a tower then it will begin moving backward until it reaches the left edge of the tower and no longer senses it
+-If no tower is sensed it will drive forward and stop when the left edge of the tower is sensed
+
+30sec-45sec
+-Drive forward towards the center server tower
+-When driving forward, while the left bumper isn’t pressed then drive slightly right into the pipe wall. When it is pressed then drive away from the wall. This being repeated will ensure the robot doesn't drift.
+-Stop driving forward at the center tower once the approximate encoder distance is met.
+-Use the same alignment procedure as in the second 15 seconds to align with the center tower
+-Open claw and then raise the arm until the claw is at the top the center tower
+-Close claw around botgal and lower arm so botgal is just above the ground.
+
+45sec-60sec
+-Turn the robot to the right 90 degrees so it is facing the analysis lab and backup room
+-Drive forward until the robot senses the black line spanning across the whole board
+-Drive forward a little past the line using encoders for precision
+-Then open the claw to release the botgal into the analysis lab.
+-Close claw and then turn around left 180 degrees to face the server racks
+
+60sec-75sec
+-Drive staring towards the server racks until bumper hits pipe
+-Use the alignment procedure as described before to align with the central tower.
+-Ride the wall forward using the left bumper like before 
+-Stop after a certain distance using encoders so the robot is next to the right high tower.
+-Raise arm with an opened claw
+-Close claw around log and then lower arm just above the ground
+-Turn left 90 degrees and back up until black line in front of the cyber security lab is sensed
+-Turn right and back up until black center line is sensed
+
+75sec-90sec
+-Back up a little past the center line using encoders
+-Lower the arm all the way so the cube is touching the ground 
+-Open the claw to release the cube on the ground 
+-Raise arm above the cube and close the claw
+-Drive back using encoders and turn right to face the left high tower
+-Drive forward until the bumpers hit the pvc pip in front of server racks
+-Turn right 90 degrees and then align with left high tower
+
+105sec-120sec
+-Raise arm with an opened claw
+-Close claw around log and then lower arm to about 5 inches of the ground.
+-Turn left 90 degrees and back up until the black line in front of the cyber security lab is sensed
+-Turn right and back up until the center line is sensed by cliff sensor
+-Drive back a little after aligning with the center line so that the claw is over the cube that has already been placed
+-Lower the arm so the cube touches the already placed one
+-STOP CODE NO MORE MOVEMENT
+
+*/
+
+
+
 //Variables
 
-int lspeed=185;
-int rspeed=185;
+int lspeed=185;   //left motor speed
+int rspeed=185;   //right motor speed
 
-int lwall=265;
-int rwall=220;
+int lwall=265;    //left motor wall ride speed
+int rwall=220;    //right motor wall ride speed
 
-int rTspeed=150;
-int lTspeed=150;
+int rTspeed=150;  //right motor turn speed
+int lTspeed=150;  //left motor turn speed
 
-float deg=1.12;
-int CM=10;
+float deg=1.12;   //encoders degrees conversion
+int CM=10;        //encoders centimeters convertion
 
-int ET = 0;   //ET sensor port
-int towerDis = 1050;
+int ET = 0;       //ET sensor port
+int towerDis = 1050;   //ET sensor tower distance threshhold value
 
-int motor0 = 0;  // arm motor USE THIS MOTOR TO READ TICKS
-int motor1 = 1;  // second arm motor
-int armSpeed = 500;
+int motor0 = 0;     //left arm motor portUSE THIS MOTOR TO READ POSITION TICKS
+int motor1 = 1;     //second arm motor port
+int armSpeed = 500; //arm motor speed
 
-int claw=3; //port for claw servo
+int claw=3;         //port for claw servo
 
-int open = 1200;   //opened claw position
-int close= 20;   //closed claw postion for botgal
+int open = 1200;    //opened claw position
+int close= 20;      //closed claw postion for botgal
 
-int high = 850;   //high tower motor position (from down)
+int high = 850;     //high tower arm motor0 position (from all the way down)
 
-int line;   // black line cliff sensor value
+int line = 1220;   //black line cliff sensor value
 
 
 //Functions
 
-void rturn(int angle);
-void lturn(int angle);
+void rturn(int angle);     //turn right in degrees using encoders
+void lturn(int angle);     //turn left in degrees using encoders
 
-void forward(int distance);
-void back(int distance);
+void forward(int distance);  //drive forward in cm using encoders
+void back(int distance);     //drive back in cm using encoders
 
-void wallRide(int distance);
-void wallRideBack(int distance);
-void wallSquare();
+void wallRide(int distance);       //wall ride forward using left bumper and encoders for distance in cm
+void wallRideBack(int distance);   //wall ride back using left bumper and encoders for distance in cm
+void wallSquare();                 //turns into wall until left bumper hits to become square with the wall
 
-void onTower();
-void offTower();
-void onTowerBack();
-void offTowerBack();
+void onTower();       //Moves forward until tower is sensed by ET sensor
+void offTower();      //Moves forward until tower is NOT sensed by ET sensor
+void onTowerBack();   //Moves back until tower is sensed by ET sensor
+void offTowerBack();  //Moves back until tower is NOT sensed by ET sensor
 
 void align();
 
