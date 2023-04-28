@@ -85,7 +85,7 @@ void high_grab() {
     set_servo_position(claw, close);
     msleep(150);
     backward(10);
-    lturn(90);
+    lturn(180);
     while(digital(low) == 0) {
         mav(arm1, downspeed);
         mav(arm2, downspeed);
@@ -106,7 +106,7 @@ void low_grab() {
     }
     freeze(arm1);
     freeze(arm2);
-    forward(50);
+    forward(5);
     set_servo_position(claw, close);
     msleep(150);
 }
@@ -133,7 +133,6 @@ int main() {
         msleep(10);
     }
     msleep(500);
-    backward(5);
     rturn(90);
     wallride(70);
     
@@ -142,11 +141,22 @@ int main() {
     backward(5);
     rturn(25);
     align();
-    backward(5);
+    backward(10);
     high_grab();
     
     //grab cubes
-    
+    rturn(90);
+    while(get_create_lbump() == 0) {
+        forward(1);
+        msleep(10);
+    }
+    wallride(10);
+    lturn(90);
+    back(5);
+    rturn(25);
+    align();
+    backward(10);
+    high_grab();
     
     
     create_disconnect();
