@@ -133,7 +133,7 @@ void backLine2();     //drives back until it has PASSED a line
 
 int main()
 {
-  //wait_for_light(1);   // intitial setup code
+  wait_for_light(1);   // intitial setup code
   shut_down_in(120);
   create_connect();
   
