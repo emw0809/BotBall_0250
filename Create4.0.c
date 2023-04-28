@@ -5,6 +5,7 @@
 PSEUDO CODE
 
 0-15sec
+-ALL rackastack movements are only a maybe
 -Turn to the left and raise your arm over the Rackastack
 -Lower the arm and turn right to hit the top of the rackastack
 -Hit it again by turning to ensure it is knocked over
