@@ -25,6 +25,7 @@ int set;
 
 void reset();
 void place();
+void grabReady(int height);
 void highGrab();
 void lowGrab();
     
@@ -149,4 +150,78 @@ void lowGrab() {
   msleep(200);
   set_servo_position(claw, cubeClose);
   msleep(200);
+}
+//0 is low tower, 1 is high tower
+void grabReady(int height){
+  enable_servo(arm);
+  enable_servo(claw);
+  int speed = 3;
+  int armPosition = get_servo_position(arm);
+  int basePosition = gmpc(base);
+    if(height == 0){
+        while(basePosition != tower || armPosition != lowReady){
+        if(basePosition < tower){
+            basePosition += 1;
+            mtp(base, baseSpeed, basePosition); 
+        }else if(basePosition > tower){
+            basePosition -= 1;
+            mtp(base, baseSpeed, basePosition); 
+        }else {
+            freeze(base);
+        }if(armPosition < lowReady){
+            armPosition += 1;
+            set_servo_position(armPosition);
+            msleep(speed);
+        }else if(armPosition > lowReady){
+            armPosition += 1;
+            set_servo_position(armPosition);
+            msleep(speed);
+    }
+  }
+  set_servo_position(claw, open);
+  msleep(200);
+    }
+  if(height == 1){
+      while(basePosition != tower || armPosition != highReady){
+    if(basePosition < tower){
+      basePosition += 1;
+      mtp(base, baseSpeed, basePosition); 
+    }else if(basePosition > tower){
+      basePosition -= 1;
+      mtp(base, baseSpeed, basePosition); 
+    }else {
+      freeze(base);
+    }if(armPosition < highReady){
+      armPosition += 1;
+      set_servo_position(armPosition);
+      msleep(speed);
+    }else if(armPosition > highReady){
+      armPosition += 1;
+      set_servo_position(armPosition);
+      msleep(speed);
+    }
+  }
+}
+    
+void grabReadyUnlooped(int height){
+    if(height == 0){
+        if(basePosition < tower){
+            basePosition += 1;
+            mtp(base, baseSpeed, basePosition); 
+        }else if(basePosition > tower){
+            basePosition -= 1;
+            mtp(base, baseSpeed, basePosition); 
+        }else {
+            freeze(base);
+        }if(armPosition < lowReady){
+            armPosition += 1;
+            set_servo_position(armPosition);
+            msleep(speed);
+        }else if(armPosition > lowReady){
+            armPosition += 1;
+            set_servo_position(armPosition);
+            msleep(speed);
+        }
+    }
+    else if(height == 1
 }
